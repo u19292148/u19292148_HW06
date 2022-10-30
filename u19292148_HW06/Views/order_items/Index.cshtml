@@ -1,0 +1,117 @@
+﻿@model PagedList.IPagedList<u19292148_HW06.Models.order>
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Orders</h2>
+<p>
+    @using (Html.BeginForm("Index", "order_items", FormMethod.Get))
+    {
+        <input id="date" type="datetime" name="Search" placeholder="yyyy-mm/dd" class="datepicker"/>
+        <input type="submit" value="Search" class="btn btn-primary" />
+        
+      
+    }
+
+
+</p>
+
+
+
+
+@foreach (var item in Model)
+{
+    <p hidden>@{decimal GrandTotal = 0;}</p>
+    <h4><b>Order @Html.DisplayFor(modelItem => item.order_id) - @Html.DisplayFor(modelItem => item.order_date)</b></h4>
+    <table class="table">
+        <tr>
+            <th>
+                Product Name
+            </th>
+            <th>
+                List Price
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Total
+            </th>
+        </tr>
+
+        @foreach (var id in item.order_items)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => id.product.product_name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => id.product.list_price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => id.quantity)
+                </td>
+                <td>
+                    @(id.product.list_price * id.quantity)
+                    
+                </td>
+                
+            </tr>
+            <p hidden>@(GrandTotal = GrandTotal + (id.product.list_price * id.quantity))</p>
+
+        }
+        <tr>
+            <td></td>
+            <td></td>
+            <td><b>Grand Total:</b></td>
+            <td><b> @GrandTotal</b></td>
+        </tr>
+
+
+
+    </table>
+    <br />
+
+}
+
+<div class="container">
+    @using (Html.BeginForm("Index", "order_items", FormMethod.Get))
+    {
+        <table>
+            <thead>
+                <tr>
+                    <td>
+                        <p>
+                            @Html.PagedListPager(Model, pageIndex => Url.Action("Index", new { pageIndex }))
+                        </p>
+                    </td>
+                </tr>
+            </thead>
+        </table>
+    }
+</div>
+@section scripts{
+    
+    <script>
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                dateFormat: 'yyyy-mm/dd',
+                changeMonth: true,
+                changeYear: true
+            });
+
+        });
+    </script>
+    
+    
+    
+    }
+
+
+
+
+
+
+

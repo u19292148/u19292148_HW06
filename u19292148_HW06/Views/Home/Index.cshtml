@@ -1,0 +1,50 @@
+﻿@*@model IEnumerable<u19292148_HW06.Models.order_items>*@
+@using u19292148_HW06.Models
+@using Newtonsoft.Json;
+
+@{
+    ViewBag.Title = "Home Page";
+}
+<br />
+<h2>Mountain Bike Report</h2>
+<br />
+<canvas id="chart"></canvas>
+
+
+
+@section scripts{
+
+    <script>
+
+
+        var dataVals = [163, 152, 200, 211, 139, 127, 122, 148, 160, 125, 118, 90];
+        var dataLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        var dataColors = [];
+        for (var i = 1; i < 13; i++) {
+            var colorR = Math.floor((Math.random() * 256));
+            var colorG = Math.floor((Math.random() * 256));
+            var colorB = Math.floor((Math.random() * 256));
+            dataColors.push("rgb(" + colorR + "," + colorG + "," + colorB + ")");
+        }
+        var chartContext = document.getElementById("chart");
+        var chart = new Chart(chartContext, {
+            type: 'bar',
+            data: {
+                datasets: [
+                    {
+                        label: 'Number of Mountain Bikes Sold',
+                        data: dataVals,
+                        backgroundColor: dataColors
+                    }
+                ],
+                labels: dataLabels
+            }
+        });
+        chart.options.animation = true;
+    </script>
+
+
+
+}
+
+

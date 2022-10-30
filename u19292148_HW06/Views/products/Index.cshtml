@@ -1,0 +1,389 @@
+﻿
+@model PagedList.IPagedList<u19292148_HW06.Models.product>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Index";
+}
+@*<style>
+    .modal-backdrop {
+        display: none !important;
+    }
+
+</style>*@
+<h2>Products</h2>
+
+<p>
+
+    <input type="text" id="search" name="Search" placeholder="Enter product name" />
+    <input type="button" value="Search" class="btn btn-primary" onclick="loadData()" />
+
+    @*@Html.ActionLink("Create", "Create", new { }, new { @class = "btn btn-info" })*@
+
+
+    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal" onclick="clearTextBox()">Create</button>
+</p>
+
+
+<div>
+
+    <table class="table table-striped" id="product_table">
+        <thead>
+            <tr>
+                <th>
+                    Product Name
+                </th>
+                <th>
+                    Year
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Brand
+                </th>
+                <th>
+                    Category
+                </th>
+            </tr>
+        </thead>
+        <tbody class="tbody" id="productTableBody"></tbody>
+
+    </table>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" style="display:none !important;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title" id="myModalLable">Add product</h4>
+            </div>
+            <div class="modal-body">
+                <form id=" prductFormData">
+                    @*<div class="form-group">
+                        <label for="product_id">ID:</label>
+                        <input type="text" class="form-control" id="ID" placeholder="Id" disabled="disabled" />
+                    </div>*@
+                    <div class="form-group">
+                        <label>Product Name:</label>
+                        <input type="text" class="form-control" id="Name" placeholder="Product Name" />
+                    </div>
+                    <div class="form-group">
+                        <label>Year:</label>
+                        <input type="text" class="form-control" id="Year" placeholder="Year" />
+                    </div>
+                    <div class="form-group">
+                        <label>Price:</label>
+                        <input type="text" class="form-control" id="Price" placeholder="Price" />
+                    </div>
+                    <div class="form-group">
+                        <label>Brand:</label>
+                        <input type="text" class="form-control" id="Brand" placeholder="Brand" />
+                    </div>
+                    <div class="form-group">
+                        <label>Category:</label>
+                        <input type="text" class="form-control" id="Category" placeholder="Category" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnAdd" >Add</button>
+                <button type="button" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="Add();">Update</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" style="display:none !important;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title" id="myModalLabel">View Product</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    @*<div class="form-group">
+                        <label for="product_id">ID:</label>
+                        <input type="text" class="form-control" id="ID1" placeholder="Id" disabled="disabled" />
+                    </div>*@
+                    <div class="form-group">
+                        <label>Product Name:</label>
+                        <input type="text" class="form-control" id="Name1" placeholder="Product Name" disabled="disabled"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Year:</label>
+                        <input type="text" class="form-control" id="Year1" placeholder="Year" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label>Price:</label>
+                        <input type="text" class="form-control" id="Price1" placeholder="Price" disabled="disabled"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Brand:</label>
+                        <input type="text" class="form-control" id="Brand1" placeholder="Brand" disabled="disabled"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Category:</label>
+                        <input type="text" class="form-control" id="Category1" placeholder="Category" disabled="disabled"/>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Store</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Santa Cruz Bikes</td>
+                                <td><span style="color:red">Out of Stock</span></td>
+                            </tr>
+                            <tr>
+                                <td>Baldwin Bikes</td>
+                                <td>11</td>
+                            </tr>
+                            <tr>
+                                <td>Rowlett Bikes</td>
+                                <td>27</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-primary" id="btnAdd" onclick="Add();">Add</button>
+                <button type="button" class="btn btn-primary" id="btnUpdate" style="display:none;" onclick="Add();">Update</button>*@
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h2 class="modal-title">Confirm</h2>
+            </div>
+            <div class="modal-body">
+                <h3>Are you sure you want to delete this product?</h3>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group">
+                    <a href="#" id="btnDelete" class="btn btn-primary">Delete</a>
+                    <a href="#" id="btnCancelConfirm" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    @using (Html.BeginForm("Index", "products", FormMethod.Get))
+    {
+        <table>
+            <thead>
+                <tr>
+                    <td>
+                        <p>
+                            @Html.PagedListPager(Model, pageIndex => Url.Action("Index", new { pageIndex }))
+                        </p>
+                    </td>
+                </tr>
+            </thead>
+        </table>
+    }
+</div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            loadData();
+        });
+
+        function loadData(search) {
+
+            debugger;
+            $.ajax({
+
+                url: "/products/GetProductList?Search=" + $("#search").val() + "&pageIndex=1",
+                type: "GET",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    var html = '';
+                    console.log(result);
+                    // var items = JSON.parse(result);
+
+                    for (var i = 0; i < result.length; i++) {
+                        html += '<tr>'; ''
+                        /*      html += '<td>' + parsedItem["product_id"] + '</td>';*/
+                        html += '<td>' + result[i].product_name + '</td>';
+                        html += '<td>' + result[i].model_year + '</td>';
+                        html += '<td>' + result[i].list_price + '</td>';
+                        html += '<td>' + result[i].category_name + '</td>';
+                        html += '<td>' + result[i].brand_name + '</td>';
+                        html += '<td><button class="btn btn-primary href="#" onclick="return getbyID(' + result[i].product_id + ')">Edit</button> | <button class="btn btn-info" onclick=" return getbyID2(' + result[i].product_id + ')">Details</button> | <button href="#" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal">Delete</button></td>';
+                        html += '</tr>';
+                    }
+                    //$.each(result, function (item) {
+                    //    debugger;
+                    //    // $("#product_table").addRow(item);
+                    //    var parsedItem = JSON.parse(item);
+                    //    console.log(parsedItem);
+
+                    //});
+                    $('#productTableBody').html(html);
+                }
+
+            });
+        };
+
+        //$("#btnAdd").click(function () {
+        //    var productFormData = $("#prductFormData").serialize();
+
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "/products/SaveProduct",
+        //        data: productFormData,
+        //        success: function () {
+        //            window.location.href = "/products/Index";
+        //        }
+        //    });
+        //});
+
+        function Add() {
+            var prductFormData = $("#prductFormData").serialize();
+            var proObj = {
+                product_id: $('#ID').val(),
+                product_name: $('#Name').val(),
+                model_year: $('#Year').val(),
+                list_price: $('#Price').val(),
+                brand_name: $('#Brand').val(),
+                category_name: $('#Category').val()
+            };
+            $.ajax({
+                url: "/products/Add",
+                data: prductFormData,
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    loadData();
+                    $('#myModal').modal('hide');
+                    
+                }
+            });
+        };
+
+        function getbyID(Id) {
+            $('#myModal').modal('show');
+            $.ajax({
+                url: "/products/getbyID/" + Id,
+                typr: "GET",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (result) {
+                    $('#ID').val(result.product_id);
+                    $('#Name').val(result.product_name);
+                    $('#Year').val(result.model_year);
+                    $('#Price').val(result.list_price);
+                    $('#Brand').val(result.brand_name);
+                    $('#Category').val(result.category_name);
+                    $('#myModal').modal('show');
+                    $('#btnUpdate').show();
+                    $('#btnAdd').hide();
+
+                }
+            });
+            return false;
+        };
+
+        function getbyID2(Id) {
+            $('#myModal2').modal('show');
+            
+            $.ajax({
+                url: "/products/getbyID2/" + Id,
+                typr: "GET",
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (result) {
+                    $('#ID1').val(result.product_id);
+                    $('#Name1').val(result.product_name);
+                    $('#Year1').val(result.model_year);
+                    $('#Price1').val(result.list_price);
+                    $('#Brand1').val(result.brand_name);
+                    $('#Category1').val(result.category_name);
+                    $('#Quantity1').val(1);
+                    $('#myModal2').modal('show');
+                    $('#myModal').modal('hide');
+                    $('#btnUpdate').show();
+                    $('#btnAdd').hide();
+
+                }
+            });
+            return false;
+        };
+
+        function Update() {
+            $('#myModalLabel').text = "Edit Information";
+            var proObj = {
+                Id: $('#ID').val(),
+                Name: $('#Name').val(),
+                Year: $('#Year').val(),
+                Price: $('#Price').val(),
+                Brand: $('#Brand').val(),
+                Category: $('#Category').val()
+            };
+            $.ajax({
+                url: "/products/Update",
+                data: JSON.stringify(proObj),
+                type: "POST",
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    loadData();
+                    $('#myModal').modal('hide');
+                    $('#ID').val("");
+                    $('#Name').val("");
+                    $('#Year').val("");
+                    $('#Price').val("");
+                    $('#Brand').val("");
+                    $('#Category').val("");
+                }
+            });
+        };
+
+        function Delete(ID) {
+            $('#deleteModal').modal('show');
+            //var ans = confirm("Are you sure you want to delete this record?");
+            
+                $.ajax({
+                    url: "/products/Delete/" + ID,
+                    type: "POST",
+                    contentType: "application/json;charset=UTF-8",
+                    dataType: "json",
+                    success: function (result) {
+                        loadData();
+                    }
+                });
+            
+        };
+
+        function clearTextBox() {
+            $('#ID').val("");
+            $('#Name').val("");
+            $('#Year').val("");
+            $('#Price').val("");
+            $('#Brand').val("");
+            $('#Category').val("");
+            $('#btnUpdate').hide();
+            $('#btnAdd').show();
+        };
+    </script>
+
+
+} 
